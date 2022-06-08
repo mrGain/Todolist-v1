@@ -50,9 +50,10 @@ app.get("/",function(req, res){
                     console.log("Successfully saved default items to DB")
                 }
             });
+            res.redirect("/")
+        }else{
+            res.render('list', {listTitle:"Today", newListitem:foundItems});
         }
-
-        res.render('list', {listTitle:"Today", newListitem:foundItems});
     });
  
    
@@ -60,18 +61,15 @@ app.get("/",function(req, res){
 
 
 app.post("/",function(req, res){
-    console.log(req.body)
-    let item = req.body.newItem
-    if (req.body.list === "work"){
-        workItems.push(item);
-        res.redirect('/work')
-    }else{
-        items.push(item);
-        res.redirect('/')
-    }
-    // console.log(newItem);
-    // res.render('list',{items:newItem});
-    
+    const itemName = req.body.newItem
+
+    const item = new Item({
+        name: itemName
+    });
+    item.save()
+
+    res.redirect("/")
+   
 });
 
 app.get("/work", function(req, res){
